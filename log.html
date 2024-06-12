@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/logestilo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>
+    <section>
+        <form method="POST">
+            <h1>Inicio</h1>
+            <div class="box">
+                <ion-icon name="email-outline"></ion-icon>
+                <input type="email" name="usuario" required>
+                <label for="">Usuario</label>
+            </div>
+            <div class="box">
+                <ion-icon name="lock-closed-outline"></ion-icon>
+                <input type="password" name="contrasena" required>
+                <label for="">Contraseña</label>
+            </div>
+            <div class="forget">
+                <label for=""><input type="checkbox" role="switch" style="background-color: #64c27b;" checked>Recordar</label><br>
+                <a href="#">Olvidé la contraseña</a>
+            </div>
+            <button type="submit">Iniciar</button>
+            <div class="register">
+                <p>No tengo cuenta <a href="registro.html" target="_blank">Registrate</a></p>
+            </div>
+        </form>
+    </section>
+
+    <?php
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $servername = "3.137.219.188"; // Dirección IP de tu instancia EC2
+        $username = "carlos"; // Nombre de usuario de tu base de datos
+        $password = "carlos109"; // Contraseña de tu base de datos
+        $dbname = "usuarios"; // Nombre de tu base de datos
+
+        // Crear conexión
+        $conn = new mysqli($servername, $username, $password, $dbname);
+
+        // Verificar conexión
+        if ($conn->connect_error) {
+            die("Conexión fallida: " . $conn->connect_error);
+        }
+
+        $usuario = $_POST['usuario'];
+        $contrasena = $_POST['contrasena'];
+
+        // Protección contra inyección SQL
+        $usuario = $conn->real_escape_string($usuario);
+        $contrasena = $conn->real_escape_string($contrasena);
+
+        $sql = "SELECT * FROM usuarios WHERE usuario='$usuario' AND contrasena='$contrasena'";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            header("Location: https://www.youtube.com");
+            exit();
+        } else {
+            echo "Usuario o contraseña incorrectos.";
+        }
+
+        $conn->close();
+    }
+    ?>
+</body>
+</html>
